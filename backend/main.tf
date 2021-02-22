@@ -107,6 +107,16 @@ resource "aws_iam_policy" "policy" {
   })
 }
 
+resource "aws_iam_role_policy_attachment" "status_lambda_execution" {
+  role       = aws_iam_role.lambda_status_exec.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+}
+
+resource "aws_iam_role_policy_attachment" "state_lambda_execution" {
+  role       = aws_iam_role.lambda_state_exec.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+}
+
 resource "aws_iam_role_policy_attachment" "ec2_reader" {
   role       = aws_iam_role.lambda_status_exec.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ReadOnlyAccess"
@@ -117,10 +127,21 @@ resource "aws_iam_role_policy_attachment" "ec2_state_changer" {
   policy_arn = aws_iam_policy.policy.arn
 }
 
-resource "aws_lambda_permission" "apigw" {
+resource "aws_lambda_permission" "apigw_status" {
    statement_id  = "AllowAPIGatewayInvoke"
    action        = "lambda:InvokeFunction"
    function_name = aws_lambda_function.status.function_name
+   principal     = "apigateway.amazonaws.com"
+
+   # The "/*/*" portion grants access from any method on any resource
+   # within the API Gateway REST API.
+   source_arn = "${aws_api_gateway_rest_api.api.execution_arn}/*/*"
+}
+
+resource "aws_lambda_permission" "apigw_state" {
+   statement_id  = "AllowAPIGatewayInvoke"
+   action        = "lambda:InvokeFunction"
+   function_name = aws_lambda_function.state.function_name
    principal     = "apigateway.amazonaws.com"
 
    # The "/*/*" portion grants access from any method on any resource
