@@ -9,4 +9,5 @@ terraform {
 provider "aws" {
   region  = "us-east-1"
   profile = "new-aleochoam"
+  version = "~> 3.29.0"
 }

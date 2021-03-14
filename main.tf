@@ -19,6 +19,7 @@ module "website" {
   cf_default_ttl            = 86400
   cf_max_ttl                = 31536000
   cf_compress               = true
+  tags                      = local.tags
 }
 
 module "backend" {
