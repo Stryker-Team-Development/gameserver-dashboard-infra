@@ -7,9 +7,9 @@ module "website" {
   bucket_index_document     = "index.html"
   bucket_error_document     = "index.html"
 
-  cf_certificate_domain     = ""
+  cf_certificate_domain     = var.domain_name
   cf_enabled                = true
-  cf_aliases                = []
+  cf_aliases                = ["www.${var.domain_name}"]
   cf_allowed_methods        = ["GET", "HEAD"]
   cf_cached_methods         = ["GET", "HEAD"]
   cf_forward_query_string   = true
