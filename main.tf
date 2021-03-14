@@ -3,9 +3,9 @@ module "website" {
   source = "git@github.com:aleochoam/terraform-base-infra.git//aws/cloudfront_website"
 
   # Bucket variables
-  bucket_name               = "stryker-valheim-dashboard"
-  bucket_index_document     = "index.html"
-  bucket_error_document     = "index.html"
+  bucket_name           = "stryker-valheim-dashboard"
+  bucket_index_document = "index.html"
+  bucket_error_document = "index.html"
 
   cf_certificate_domain     = var.domain_name
   cf_enabled                = true
@@ -23,4 +23,5 @@ module "website" {
 
 module "backend" {
   source = "./backend"
+  tags   = local.tags
 }

@@ -1,7 +1,7 @@
 provider "aws" {
   region  = "us-east-2"
   profile = "new-aleochoam"
-  alias = "ohio"
+  alias   = "ohio"
 }
 
 data "aws_instance" "server" {
@@ -30,6 +30,8 @@ resource "aws_iam_role" "lambda_status_exec" {
   ]
 }
 EOF
+
+  tags = var.tags
 }
 
 resource "aws_iam_role" "lambda_state_exec" {
@@ -50,16 +52,18 @@ resource "aws_iam_role" "lambda_state_exec" {
   ]
 }
 EOF
+
+  tags = var.tags
 }
 
 # Status endpoint
 resource "aws_lambda_function" "status" {
   function_name = "StatusLambda"
 
-  handler = "main.handler"
-  runtime = "python3.7"
+  handler  = "main.handler"
+  runtime  = "python3.7"
   filename = "./lambda.zip"
-  timeout = 10
+  timeout  = 10
 
   role = aws_iam_role.lambda_status_exec.arn
 
@@ -68,15 +72,17 @@ resource "aws_lambda_function" "status" {
       INSTANCE_ID = data.aws_instance.server.id
     }
   }
+
+  tags = var.tags
 }
 
 resource "aws_lambda_function" "state" {
   function_name = "StateLambda"
 
-  handler = "main.handler"
-  runtime = "python3.7"
+  handler  = "main.handler"
+  runtime  = "python3.7"
   filename = "./lambda.zip"
-  timeout = 10
+  timeout  = 10
 
   role = aws_iam_role.lambda_state_exec.arn
 
@@ -85,6 +91,8 @@ resource "aws_lambda_function" "state" {
       INSTANCE_ID = data.aws_instance.server.id
     }
   }
+
+  tags = var.tags
 }
 
 resource "aws_iam_policy" "policy" {
@@ -96,7 +104,7 @@ resource "aws_iam_policy" "policy" {
     Version = "2012-10-17"
     Statement = [
       {
-        "Action": [
+        "Action" : [
           "ec2:StartInstances",
           "ec2:StopInstances"
         ],
@@ -128,23 +136,23 @@ resource "aws_iam_role_policy_attachment" "ec2_state_changer" {
 }
 
 resource "aws_lambda_permission" "apigw_status" {
-   statement_id  = "AllowAPIGatewayInvoke"
-   action        = "lambda:InvokeFunction"
-   function_name = aws_lambda_function.status.function_name
-   principal     = "apigateway.amazonaws.com"
+  statement_id  = "AllowAPIGatewayInvoke"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.status.function_name
+  principal     = "apigateway.amazonaws.com"
 
-   # The "/*/*" portion grants access from any method on any resource
-   # within the API Gateway REST API.
-   source_arn = "${aws_api_gateway_rest_api.api.execution_arn}/*/*"
+  # The "/*/*" portion grants access from any method on any resource
+  # within the API Gateway REST API.
+  source_arn = "${aws_api_gateway_rest_api.api.execution_arn}/*/*"
 }
 
 resource "aws_lambda_permission" "apigw_state" {
-   statement_id  = "AllowAPIGatewayInvoke"
-   action        = "lambda:InvokeFunction"
-   function_name = aws_lambda_function.state.function_name
-   principal     = "apigateway.amazonaws.com"
+  statement_id  = "AllowAPIGatewayInvoke"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.state.function_name
+  principal     = "apigateway.amazonaws.com"
 
-   # The "/*/*" portion grants access from any method on any resource
-   # within the API Gateway REST API.
-   source_arn = "${aws_api_gateway_rest_api.api.execution_arn}/*/*"
+  # The "/*/*" portion grants access from any method on any resource
+  # within the API Gateway REST API.
+  source_arn = "${aws_api_gateway_rest_api.api.execution_arn}/*/*"
 }
