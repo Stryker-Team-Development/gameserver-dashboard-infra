@@ -1,11 +1,4 @@
-provider "aws" {
-  region  = "us-east-1"
-  profile = "jose.alvarez"
-  alias   = "ohio"
-}
-
 data "aws_instance" "server" {
-  provider = aws.ohio
   filter {
     name   = "tag:Name"
     values = ["Minecraft-Server"]
