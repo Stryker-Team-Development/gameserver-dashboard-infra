@@ -1,6 +1,6 @@
 provider "aws" {
-  region  = "us-east-2"
-  profile = "new-aleochoam"
+  region  = "us-east-1"
+  profile = "jose.alvarez"
   alias   = "ohio"
 }
 
@@ -8,9 +8,10 @@ data "aws_instance" "server" {
   provider = aws.ohio
   filter {
     name   = "tag:Name"
-    values = ["Valheim-Server"]
+    values = ["Minecraft-Server"]
   }
 }
+
 
 resource "aws_iam_role" "lambda_status_exec" {
   name = "LambdaStatusIAMRole"
@@ -61,7 +62,7 @@ resource "aws_lambda_function" "status" {
   function_name = "StatusLambda"
 
   handler  = "main.handler"
-  runtime  = "python3.7"
+  runtime  = "python3.12"
   filename = "./lambda.zip"
   timeout  = 10
 
@@ -80,7 +81,7 @@ resource "aws_lambda_function" "state" {
   function_name = "StateLambda"
 
   handler  = "main.handler"
-  runtime  = "python3.7"
+  runtime  = "python3.12"
   filename = "./lambda.zip"
   timeout  = 10
 
@@ -98,7 +99,7 @@ resource "aws_lambda_function" "state" {
 resource "aws_iam_policy" "policy" {
   name        = "StartStopServerPolicy"
   path        = "/"
-  description = "Allow to start and stop the Valheim server"
+  description = "Allow to start and stop the Minecraft server"
 
   policy = jsonencode({
     Version = "2012-10-17"

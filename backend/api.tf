@@ -1,6 +1,6 @@
 resource "aws_api_gateway_rest_api" "api" {
-  name        = "ValheimDashBoardAPI"
-  description = "API for querying information for Valheim server"
+  name        = "MinecraftDashBoardAPI"
+  description = "API for querying information for Minecraft server"
   tags        = var.tags
 }
 

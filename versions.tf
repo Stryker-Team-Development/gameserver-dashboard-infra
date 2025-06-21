@@ -1,13 +1,13 @@
 terraform {
-  backend "s3" {
-    bucket = "new-aleochoam-terraform-states"
-    key    = "valheim-dashboard/terraform.tfstate"
-    region = "us-east-1"
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = ">= 5.0.0"
+    }
   }
 }
 
 provider "aws" {
   region  = "us-east-1"
-  profile = "new-aleochoam"
-  version = "~> 3.29.0"
+  profile = "jose.alvarez"
 }
