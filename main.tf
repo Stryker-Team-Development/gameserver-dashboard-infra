@@ -15,6 +15,10 @@ module "website" {
   cf_forward_cookies        = "none"
   cf_viewer_protocol_policy = "redirect-to-https"
   cf_compress               = true
+  cf_aliases                = [
+    "combo-aguacatala.space",
+    "www.combo-aguacatala.space"
+  ]
 }
 
 module "backend" {

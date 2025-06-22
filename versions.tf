@@ -7,7 +7,7 @@ terraform {
   }
 
   backend "s3" {
-    bucket = "olimpo-platform-terraform-states"
+    bucket = "minecraft-dashboard-terraform-state"
     key    = "terraform.tfstate"
     region = "us-east-1"
   }
